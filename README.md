@@ -20,4 +20,4 @@ The software in this repository automates the management of the official [AWS Ne
 
 Use of Amazon Web Services (including benchmarking purposes) via this software is still regulated by Amazon's terms of use (since you need to provide information about your account - AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_ROLE_ARN to the software).
 
-Use the results of benchmarking (e.g. for publishing) may cause terms violations of agreement and further liability.
+Inappropriate use benchmarking results (e.g. for publishing) may cause terms violations of agreement and further liability.
