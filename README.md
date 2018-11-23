@@ -1,5 +1,5 @@
 # System Adapter for Amazon Neptune
-HOBBIT-compatible system Adapter for [AWS Neptune](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=2ahUKEwiKk8_Nw-reAhUDDSwKHWcrC-oQFjAAegQIBRAC&url=https%3A%2F%2Faws.amazon.com%2Fneptune%2F&usg=AOvVaw38TVCJpz68Aqm-z0jtgZxN). 
+HOBBIT-compatible system Adapter for [AWS Neptune](https://aws.amazon.com/neptune/). 
 - Uses the official cloud formation stack splitted on three ones (vpc, client, cluster)
 - The code can be executed locally (without the HOBBIT platform) together with the [Data Storage Benchmark](https://github.com/hobbit-project/DataStorageBenchmark). The original benchmark images or modified images with reduced amount of triples (2M) for ScaleFactor=1 can be used (see BenchmarkTest.java).
 
