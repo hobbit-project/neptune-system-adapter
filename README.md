@@ -2,7 +2,7 @@
 HOBBIT-compatible system adapter for [AWS Neptune](https://aws.amazon.com/neptune/). 
 - Created out of the official [AWS Neptune Cloud Formation stack](https://docs.aws.amazon.com/neptune/latest/userguide/quickstart.html) splitted on three ones (for speeding up)
 - The code can be executed locally (without the HOBBIT platform) together with the [Data Storage Benchmark](https://github.com/hobbit-project/DataStorageBenchmark). 
-- The original benchmark images or modified images (with reduced amount of triples (2M) for ScaleFactor=1) can be used (see BenchmarkTest.java).
+- The original benchmark images or modified images with reduced amount of triples (2M) for ScaleFactor=1 can be used (see BenchmarkTest.java).
 
 ## Requrements (for local running, packaging, building docker image)
 - Docker in swarm mode (tested on 17.12.1)
