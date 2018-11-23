@@ -12,7 +12,7 @@ HOBBIT-compatible system adapter for [AWS Neptune](https://aws.amazon.com/neptun
 
 ## Running/debugging instructions
 - Provide account-specific information (see requirements) + ssh key (see Constants.java)
-- To run the adapter as part of Benchmark: `make test-system`
+- To run the adapter (together with the benchmark): `make test-system`
 - To debug adapter as pure java: see the `checkHealth()` from BenchmarkTest.java
 - To package adapter into docker image (to push into the HOBBIT platform): `make build-images`. SshKeys folder would addded into the docker image (configured in BenchmarkTest.java).
 - To run the adapter as docker image (to check it locally before pushing the HOBBIT platform): `checkHealthDockerized()` from BenchmarkTest.java
