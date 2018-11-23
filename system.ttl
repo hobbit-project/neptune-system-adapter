@@ -1,0 +1,42 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+@prefix gerbil: <http://w3id.org/gerbil/vocab#> .
+@prefix hobbit: <http://w3id.org/hobbit/vocab#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix bench: <http://w3id.org/bench#> .
+
+bench:neptuneSystemAdapter a	hobbit:SystemInstance;
+    rdfs:label	"NeptuneSystemAdapter"@en;
+	rdfs:comment "NeptuneSystemAdapter"@en;
+	hobbit:implementsAPI bench:API;
+	hobbit:imageName "git.project-hobbit.eu:4567/smirnp/data-storage-benchmark/neptune-system-adapter" ;
+    hobbit:hasParameter bench:AWS_ACCESS_KEY_ID;
+    hobbit:hasParameter bench:AWS_SECRET_KEY;
+    hobbit:hasParameter bench:AWS_ROLE_ARN;
+    hobbit:hasParameter bench:AWS_REGION .
+
+bench:AWS_ACCESS_KEY_ID  a hobbit:Parameter;
+                rdfs:label "AWS_ACCESS_KEY_ID"@en;
+                rdfs:comment "AWS_ACCESS_KEY_ID"@en;
+                rdfs:range xsd:String;
+                hobbit:defaultValue ""^^xsd:String .
+
+bench:AWS_SECRET_KEY     a hobbit:Parameter;
+                rdfs:label "AWS_SECRET_KEY"@en;
+                rdfs:comment "AWS_SECRET_KEY"@en;
+                rdfs:range xsd:String;
+                hobbit:defaultValue ""^^xsd:String .
+
+bench:AWS_ROLE_ARN a hobbit:Parameter;
+                rdfs:label "AWS_ROLE_ARN"@en;
+                rdfs:comment "AWS_ROLE_ARN"@en;
+                rdfs:range xsd:String;
+                hobbit:defaultValue ""^^xsd:String .
+
+bench:AWS_REGION a hobbit:Parameter;
+                rdfs:label "AWS_REGION"@en;
+                rdfs:comment "AWS_REGION"@en;
+                rdfs:range xsd:String;
+                hobbit:defaultValue ""^^xsd:String .
