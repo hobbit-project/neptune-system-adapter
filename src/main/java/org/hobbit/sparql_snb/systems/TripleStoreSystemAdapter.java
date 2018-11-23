@@ -4,7 +4,7 @@ import org.aksw.jena_sparql_api.core.UpdateExecutionFactory;
 import org.aksw.jena_sparql_api.core.UpdateExecutionFactoryHttp;
 import org.aksw.jena_sparql_api.core.utils.UpdateRequestUtils;
 import org.aksw.jena_sparql_api.http.QueryExecutionFactoryHttp;
-import org.apache.jena.atlas.web.auth.HttpAuthenticator;
+
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
@@ -46,7 +46,6 @@ public abstract class TripleStoreSystemAdapter extends AbstractSystemAdapter {
 
     protected int loadingNumber=0;
     private JenaKeyValue parameters;
-    protected HttpAuthenticator auth;
     protected String updateEndpoint;
     protected String queryEndpoint;
 
@@ -91,15 +90,16 @@ public abstract class TripleStoreSystemAdapter extends AbstractSystemAdapter {
         }else
             LOGGER.info("Update endpoint: {}", updateEndpoint);
 
-        if(auth==null){
-            LOGGER.warn("HttpAuthenticator for updateFactory not inialized. Auth would be skipped");
-        }
+//        if(auth==null){
+//            LOGGER.warn("HttpAuthenticator for updateFactory not inialized. Auth would be skipped");
+//        }
 
 
         queryExecFactory = new QueryExecutionFactoryHttp(queryEndpoint);
         // create update factory
 
-        updateExecFactory = (auth!=null ? new UpdateExecutionFactoryHttp(updateEndpoint, auth) : new UpdateExecutionFactoryHttp(updateEndpoint));
+        //updateExecFactory = (auth!=null ? new UpdateExecutionFactoryHttp(updateEndpoint, auth) : new UpdateExecutionFactoryHttp(updateEndpoint));
+        updateExecFactory = new UpdateExecutionFactoryHttp(updateEndpoint);
         LOGGER.info("Initialization is over.");
 
         postInit();
@@ -335,6 +335,44 @@ public abstract class TripleStoreSystemAdapter extends AbstractSystemAdapter {
         }
     }
 
+//    protected void executeLoadCommand(String[] command){
+//
+//        Thread t1 = new Thread(new Runnable() {
+//            public void run() {
+//                LOGGER.info("Executing load command: {}", String.join(" ", command));
+//                execAsyncCommand(tripleStoreContainerId, command);
+//            }});
+//        t1.start();
+//
+//        try {
+//            File resultFile = new File(sharedFolderPath, "loadResult.log");
+//            File tempResultFile = new File(sharedFolderPath, "tmpResult.log");
+//            LOGGER.info("Waiting result at path {}", resultFile.toString());
+//
+//            String prevLogs="";
+//            while(!resultFile.exists()){
+//                if(tempResultFile.exists()){
+//                    String currLogs = new String(Files.readAllBytes(Paths.get(tempResultFile.getAbsolutePath())));
+//                    if (currLogs.length() > prevLogs.length()){
+//                        String logsToPrint = currLogs.substring(prevLogs.length());
+//                        String[] splitted = logsToPrint.split("\n");
+//                        for(String line : splitted) {
+//                            LOGGER.info(line);
+//                        }
+//                        prevLogs=currLogs;
+//                    }
+//                }
+//                Thread.sleep(1000);
+//            }
+//            String result = new String(Files.readAllBytes(Paths.get(resultFile.getAbsolutePath())));
+//            LOGGER.info("Loading result: ");
+//            LOGGER.info(result);
+//        } catch (Exception e) {
+//            LOGGER.error("Failed to read command result");
+//            System.exit(1);
+//        }
+//
+//    }
 
     @Override
     public void close() throws IOException {

@@ -165,7 +165,6 @@ public class NeptuneSystemAdapter extends TripleStoreSystemAdapter {
         HSession resolveSession = new HSession(SSH_USER, bastionHostIp, SSH_PORT, SSH_KEY_PATH);
         sshConnector = SshConnector.getInstance();
         sshConnector.openTunnel(resolveSession, new Function<HSession, String>(){
-
             @Override
             public String apply(HSession hSession) {
                 try {

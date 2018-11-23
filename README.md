@@ -11,7 +11,7 @@ HOBBIT-compatible system adapter for [AWS Neptune](https://aws.amazon.com/neptun
 - AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_ROLE_ARN, AWS_REGION provided as environemnt variables (or specified in the system.ttl file)
 
 ## Running/debugging instructions
-- Provide account-specific information (see requirements)
+- Provide account-specific information (see requirements) + ssh key (see Constants.java)
 - To run the adapter as part of Benchmark: `make debug-system`
 - To debug adapter as pure java: see the `checkHealth()` from BenchmarkTest.java
 - To package adapter into docker image (to push into the HOBBIT platform): `make build-images`
