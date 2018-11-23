@@ -3,7 +3,7 @@ HOBBIT-compatible system Adapter for [AWS Neptune](https://www.google.com/url?sa
 - Uses the official cloud formation stack splitted on three ones (vpc, client, cluster)
 - The code can be executed locally together with the [Data Storage Benchmark](https://github.com/hobbit-project/DataStorageBenchmark) (Using either the original images or modified images with reduced amount of triples (2M) for ScaleFactor=1 - see BenchmarkTest.java)
 
-## Requrements (for running or building/docker image building)
+## Requrements (for running, packaging/docker image building)
 - Docker in swarm mode (tested on 17.12.1)
 - [Java SDK](https://github.com/hobbit-project/java-sdk) dependency installed
 - [AwsController](https://github.com/hobbit-project/aws-controller) dependency installed
