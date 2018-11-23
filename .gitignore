@@ -1,0 +1,16 @@
+# Package Files #
+*.jar
+*.war
+*.ear
+*.pyc
+*.iml
+
+#other stuff
+.idea/*
+target/
+sshkeys/.*pem
+dependency-reduced-pom.xml
+*~
+.classpath
+.project
+.settings/
