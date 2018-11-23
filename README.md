@@ -18,6 +18,6 @@ HOBBIT-compatible system Adapter for [AWS Neptune](https://www.google.com/url?sa
 ## Disclaimer
 The software in this repository automates the management of the official [AWS Neptune Cloud Formation stacks](https://docs.aws.amazon.com/neptune/latest/userguide/quickstart.html) for benchmarking purposes within the HOBBIT platform. 
 
-Use of Amazon Web Services (including benchmarking purposes) via this software is still regulated by Amazon's terms of use (since you need to provide information about your account - AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_ROLE_ARN to the software).
+Use of Amazon Web Services (including benchmarking purposes) via this software is still regulated by Amazon's terms of use (since you need to provide account-sensitive information).
 
 Inappropriate use benchmarking results (e.g. for publishing) may cause terms violations of agreement and further liability.
