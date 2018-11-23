@@ -16,4 +16,8 @@ HOBBIT-compatible system Adapter for [AWS Neptune](https://www.google.com/url?sa
 - To run the adapter as docker image (to check it locally before pushing the HOBBIT platform): `checkHealthDockerized()` from BenchmarkTest.java
 
 ## Disclaimer
-The software in this repository automates the management of the official [AWS Neptune Cloud Formation stacks](https://docs.aws.amazon.com/neptune/latest/userguide/quickstart.html) for benchmarking purposes within the HOBBIT platform. Use of AWS Services (including the benchmarking purposes) via this software is still regulated by Amazon's terms of use (since you need to provide information about your account - AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_ROLE_ARN to the software). Use the benchmark results (e.g. for publishing) may violate the terms and cause liability.
+The software in this repository automates the management of the official [AWS Neptune Cloud Formation stacks](https://docs.aws.amazon.com/neptune/latest/userguide/quickstart.html) for benchmarking purposes within the HOBBIT platform. 
+
+Use of Amazon Web Services (including benchmarking purposes) via this software is still regulated by Amazon's terms of use (since you need to provide information about your account - AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_ROLE_ARN to the software).
+
+Use the benchmark results (e.g. for publishing) may violate the terms and cause liability.
