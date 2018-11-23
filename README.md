@@ -8,7 +8,7 @@ HOBBIT-compatible system adapter for [AWS Neptune](https://aws.amazon.com/neptun
 - Docker in swarm mode (tested on 17.12.1)
 - [Java SDK](https://github.com/hobbit-project/java-sdk) dependency installed
 - [AwsController](https://github.com/hobbit-project/aws-controller) dependency installed
-- AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_ROLE_ARN, AWS_REGION provided as environemnt variables (or specified in the system.ttl) file
+- AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_ROLE_ARN, AWS_REGION provided as environemnt variables (or specified in the system.ttl file)
 
 ## Running/debugging instructions
 - Provide account-specific information (see requirements)
