@@ -7,6 +7,7 @@ HOBBIT-compatible system adapter for [AWS Neptune](https://aws.amazon.com/neptun
 - Please note that at the moment the system adapter does not delete created cloud resources (stacks). Don't forget to delete them manually.
 
 ## Requrements (for packaging, local running, building docker image)
+- Git, Java, Maven
 - Docker in swarm mode (tested on 17.12.1)
 - `127.0.0.1 rabbit` string in `/etc/hosts` file
 - AWS_ACCESS_KEY_ID, AWS_SECRET_KEY, AWS_ROLE_ARN, AWS_REGION specified as environment variables (or specified via the system.ttl file)
