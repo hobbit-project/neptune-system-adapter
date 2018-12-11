@@ -67,6 +67,10 @@ public class NeptuneSystemAdapter extends TripleStoreSystemAdapter {
     private String sparqlHostAndPort;
     String instanceType;
     int attemptsLimit=12;
+    String aws_access_key_id;
+    String aws_secret_key;
+    String aws_role_arn;
+    String aws_region;
 
     //JSONParser jsonParser;
 
@@ -109,24 +113,16 @@ public class NeptuneSystemAdapter extends TripleStoreSystemAdapter {
         if(missingParams.size()>0)
             throw new Exception("Missing params: "+ String.join(", ", missingParams.toArray(new String[0])));
 
-        String aws_access_key_id = parameters.getStringValueFor(BENCHMARK_NS+"#AWS_ACCESS_KEY_ID");
-        String aws_secret_key = parameters.getStringValueFor(BENCHMARK_NS+"#AWS_SECRET_KEY");
-        String aws_role_arn = parameters.getStringValueFor(BENCHMARK_NS+"#AWS_ROLE_ARN");
-        String aws_region = parameters.getStringValueFor(BENCHMARK_NS+"#AWS_REGION");
+        aws_access_key_id = parameters.getStringValueFor(BENCHMARK_NS+"#AWS_ACCESS_KEY_ID");
+        aws_secret_key = parameters.getStringValueFor(BENCHMARK_NS+"#AWS_SECRET_KEY");
+        aws_role_arn = parameters.getStringValueFor(BENCHMARK_NS+"#AWS_ROLE_ARN");
+        aws_region = parameters.getStringValueFor(BENCHMARK_NS+"#AWS_REGION");
 
         if(parameters.containsKey(BENCHMARK_NS+"#neptuneInstanceType"))
             instanceType = parameters.getStringValueFor(BENCHMARK_NS+"#neptuneInstanceType");
 
         awsController = new AWSController(aws_access_key_id, aws_secret_key, aws_role_arn, aws_region);
         //awsController2 = new AWSController(aws_access_key_id, aws_secret_key, aws_role_arn, "eu-central-1");
-        try {
-            awsController.init();
-            //awsController2.init();
-        }
-        catch (Exception e){
-            LOGGER.error("Failed to init aws controller: {}", e.getLocalizedMessage());
-        }
-
 
         initClusterManager();
         //Thread.sleep(600000);
@@ -275,9 +271,7 @@ public class NeptuneSystemAdapter extends TripleStoreSystemAdapter {
             jsonObject.addProperty("source", sourceUrl);
             jsonObject.addProperty("format", "turtle");
             jsonObject.addProperty("iamRoleArn", roleArn);
-            //jsonObject.addProperty("region", awsController2.getRegion());
-            //jsonObject.addProperty("region", awsController.getRegion());
-            jsonObject.addProperty("region", awsController.getRegion());
+            jsonObject.addProperty("region", aws_region);
 
             String inputString = jsonObject.toString();
             httppost.setEntity(new StringEntity(inputString, ContentType.APPLICATION_JSON));

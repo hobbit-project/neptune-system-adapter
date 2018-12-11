@@ -24,7 +24,6 @@ public class NeptuneClusterManagerTest {
         environmentVariables.set("AWS_REGION", "eu-west-1");
 
         AWSController awsController = new AWSController();
-        awsController.init();
         clusterManager = new NeptuneClusterManager(awsController,"neptune", SSH_KEY_NAME);
 
         neptuneSystemAdapter = new NeptuneSystemAdapter();

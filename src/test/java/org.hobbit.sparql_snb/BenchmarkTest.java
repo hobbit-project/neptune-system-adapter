@@ -2,6 +2,7 @@ package org.hobbit.sparql_snb;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 import org.hobbit.controller.docker.MetaDataFactory;
 import org.hobbit.core.Constants;
 import org.hobbit.core.components.Component;
@@ -18,11 +19,13 @@ import org.hobbit.sdk.examples.dummybenchmark.DummyEvalStorage;
 import org.hobbit.sdk.utils.CommandQueueListener;
 import org.hobbit.sdk.utils.ComponentsExecutor;
 
+import org.hobbit.sdk.utils.ModelsHandler;
 import org.hobbit.sdk.utils.MultiThreadedImageBuilder;
 import org.hobbit.sdk.utils.commandreactions.CommandReactionsBuilder;
 
         import org.hobbit.sparql_snb.systems.neptune.NeptuneSystemAdapter;
 
+import org.hobbit.vocab.HOBBIT;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -33,6 +36,7 @@ import java.io.IOException;
 import java.util.Date;
 
 
+import static org.apache.jena.rdf.model.ModelFactory.createDefaultModel;
 import static org.hobbit.sparql_snb.Constants.*;
 import static org.hobbit.sparql_snb.Constants.NEPTUNE_IMAGE_NAME;
 import static org.hobbit.core.Constants.*;
@@ -60,13 +64,13 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
     EvalModuleDockerBuilder evalModuleBuilder;
     SystemAdapterDockerBuilder systemAdapterBuilder;
 
-    Component benchmarkController = new SNBBenchmarkController();
-    Component dataGen = new SNBDataGenerator();
-    Component taskGen = new SNBTaskGenerator();
+    Component benchmarkController;
+    Component dataGen;
+    Component taskGen;
     Component evalStorage = new DummyEvalStorage();
 
     Component systemAdapter;
-    Component evalModule = new SNBEvaluationModule();
+    Component evalModule;
 
     @Before
     public void init(){
@@ -158,8 +162,8 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
         String systemContainerId = "system";
 
 
-       benchmarkContainerId = commandQueueListener.createContainer(benchmarkBuilder.getImageName(), "benchmark", new String[]{ HOBBIT_EXPERIMENT_URI_KEY+"="+NEW_EXPERIMENT_URI,  BENCHMARK_PARAMETERS_MODEL_KEY+"="+ RabbitMQUtils.writeModel2String(createBenchmarkParameters().toModel()) });
-       systemContainerId = commandQueueListener.createContainer(systemAdapterBuilder.getImageName(), "system" ,new String[]{ SYSTEM_PARAMETERS_MODEL_KEY+"="+  RabbitMQUtils.writeModel2String(createSystemParameters()) });
+       benchmarkContainerId = commandQueueListener.createContainer(benchmarkBuilder.getImageName(), "benchmark", new String[]{ HOBBIT_EXPERIMENT_URI_KEY+"="+NEW_EXPERIMENT_URI,  BENCHMARK_PARAMETERS_MODEL_KEY+"="+ RabbitMQUtils.writeModel2String(createBenchmarkParameters())});
+       systemContainerId = commandQueueListener.createContainer(systemAdapterBuilder.getImageName(), "system" ,new String[]{ SYSTEM_PARAMETERS_MODEL_KEY+"="+  RabbitMQUtils.writeModel2String(ModelsHandler.createMergedParametersModel(createSystemParameters(), ModelsHandler.readModelFromFile("system.ttl"))) });
 
         environmentVariables.set("BENCHMARK_CONTAINER_ID", benchmarkContainerId);
         environmentVariables.set("SYSTEM_CONTAINER_ID", systemContainerId);
@@ -172,27 +176,32 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
     }
 
 
-    public static JenaKeyValue createBenchmarkParameters() {
+    public static Model createBenchmarkParameters() {
 
-        JenaKeyValue kv = new JenaKeyValue(NEW_EXPERIMENT_URI);
-        kv.put(BENCHMARK_NS+"#hasSF", 1);
-        kv.put(BENCHMARK_NS+"#numberOfOperations", 50);
-        return kv;
+        Model model = createDefaultModel();
+        String benchmarkInstanceId = Constants.NEW_EXPERIMENT_URI;
+        Resource experimentResourceNode = model.createResource(benchmarkInstanceId);
+        model.add(experimentResourceNode, RDF.type, HOBBIT.Experiment);
+
+        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#hasSF"), "1");
+        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#numberOfOperations"), "50");
+        return model;
     }
 
     public static Model createSystemParameters() throws IOException {
-        byte[] bytes = FileUtils.readFileToByteArray(new File("system.ttl"));
-        Model model =  MetaDataFactory.byteArrayToModel(bytes, "TTL");
+        Model model = createDefaultModel();
 
         String benchmarkInstanceId = Constants.NEW_EXPERIMENT_URI;
-        Resource benchmarkInstanceResource = model.createResource(benchmarkInstanceId);
-        //model.add(benchmarkInstanceResource, model.createProperty(BENCHMARK_NS+"#neptuneInstanceType"), model.createTypedLiteral("db.r4.2xlarge", "xsd:string"));
-        model.add(benchmarkInstanceResource, model.createProperty(BENCHMARK_NS+"#neptuneInstanceType"), model.createTypedLiteral("db.r4.large", "xsd:string"));
+        Resource experimentResourceNode = model.createResource(benchmarkInstanceId);
+        model.add(experimentResourceNode, RDF.type, HOBBIT.Experiment);
 
-        model.add(benchmarkInstanceResource, model.createProperty(BENCHMARK_NS+"#AWS_ACCESS_KEY_ID"), model.createTypedLiteral(System.getenv("AWS_ACCESS_KEY_ID"), "xsd:string"));
-        model.add(benchmarkInstanceResource, model.createProperty(BENCHMARK_NS+"#AWS_SECRET_KEY"), model.createTypedLiteral(System.getenv("AWS_SECRET_KEY"), "xsd:string"));
-        model.add(benchmarkInstanceResource, model.createProperty(BENCHMARK_NS+"#AWS_ROLE_ARN"), model.createTypedLiteral(System.getenv("AWS_ROLE_ARN"), "xsd:string"));
-        model.add(benchmarkInstanceResource, model.createProperty(BENCHMARK_NS+"#AWS_REGION"), model.createTypedLiteral(System.getenv("AWS_REGION"), "xsd:string"));
+        //model.add(benchmarkInstanceResource, model.createProperty(BENCHMARK_NS+"#neptuneInstanceType"), model.createTypedLiteral("db.r4.2xlarge", "xsd:string"));
+        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#neptuneInstanceType"), "db.r4.large");
+
+        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_ACCESS_KEY_ID"), System.getenv("AWS_ACCESS_KEY_ID"));
+        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_SECRET_KEY"), System.getenv("AWS_SECRET_KEY"));
+        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_ROLE_ARN"), System.getenv("AWS_ROLE_ARN"));
+        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_REGION"), System.getenv("AWS_REGION"));
 
         return model;
 

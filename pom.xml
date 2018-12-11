@@ -33,26 +33,25 @@
 		<dependency>
 			<groupId>org.hobbit</groupId>
 			<artifactId>aws-controller</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hobbit</groupId>
 			<artifactId>hobbit-java-sdk</artifactId>
-			<version>1.1.14-SNAPHSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hobbit</groupId>
-			<artifactId>DataStorageBenchmark</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>test</scope>
+			<version>1.1.15</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hobbit</groupId>
+					<artifactId>core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hobbit</groupId>
 			<artifactId>core</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.12</version>
 		</dependency>
 
 		<dependency>
@@ -60,6 +59,12 @@
 			<artifactId>platform-controller</artifactId>
 			<version>2.0.5</version>
 			<scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hobbit</groupId>
+                    <artifactId>aws-controller</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 
 		<dependency>
@@ -68,17 +73,6 @@
 			<version>3.1.0-2-SNAPSHOT</version>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.apache.jena</groupId>-->
-			<!--<artifactId>jena-arq</artifactId>-->
-			<!--<version>3.1.0</version>-->
-		<!--</dependency>-->
-
-		<!--<dependency>-->
-			<!--<groupId>com.google.guava</groupId>-->
-			<!--<artifactId>guava</artifactId>-->
-			<!--<version>23.0</version>-->
-		<!--</dependency>-->
 
     </dependencies>
 
@@ -93,7 +87,6 @@
 					<target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -141,30 +134,7 @@
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
-			<!--<plugin>-->
-				<!--<artifactId>maven-resources-plugin</artifactId>-->
-				<!--<version>2.7</version>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<id>copy-resources</id>-->
-						<!--<phase>install</phase>-->
-						<!--<goals>-->
-							<!--<goal>copy-resources</goal>-->
-						<!--</goals>-->
-						<!--<configuration>-->
-							<!--<outputDirectory>${basedir}/target</outputDirectory>-->
-							<!--<resources>-->
-								<!--<resource>-->
-									<!--<directory>${basedir}/src/main/resources</directory>-->
-									<!--<includes>-->
-										<!--<include>*.txt</include>-->
-									<!--</includes>-->
-								<!--</resource>-->
-							<!--</resources>-->
-						<!--</configuration>-->
-					<!--</execution>-->
-				<!--</executions>-->
-			<!--</plugin>-->
+
 		</plugins>
 	</build>
 </project>
