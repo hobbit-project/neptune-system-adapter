@@ -1,4 +1,7 @@
 # System Adapter for Amazon Neptune
+
+[![Build Status](https://travis-ci.org/hobbit-project/neptune-system-adapter.svg?branch=master)](https://travis-ci.org/hobbit-project/neptune-system-adapter)
+
 HOBBIT-compatible system adapter for [AWS Neptune](https://aws.amazon.com/neptune/). 
 - Created out of the official [AWS Neptune Cloud Formation stack](https://docs.aws.amazon.com/neptune/latest/userguide/quickstart.html) splitted on three ones (for speeding up)
 - The code can be executed locally (without the HOBBIT platform) together with the [Data Storage Benchmark](https://github.com/hobbit-project/DataStorageBenchmark). 
