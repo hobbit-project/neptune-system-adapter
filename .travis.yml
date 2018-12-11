@@ -1,6 +1,7 @@
 language: java
 script:
   - make package
+  - test-system
 services:
   - docker
 sudo: required
