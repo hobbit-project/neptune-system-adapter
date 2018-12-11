@@ -64,13 +64,15 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
     EvalModuleDockerBuilder evalModuleBuilder;
     SystemAdapterDockerBuilder systemAdapterBuilder;
 
-    Component benchmarkController;
-    Component dataGen;
-    Component taskGen;
-    Component evalStorage = new DummyEvalStorage();
+    //initilize these values to run them as pure java components (requires org.hobbit.DataStorageBenchmark dependency)
+    Component benchmarkController; // = new SNBBenchmarkController();
+    Component dataGen;// = new SNBDataGenerator();
+    Component taskGen;// = new SNBTaskGenerator();
+    Component evalStorage;// = new DummyEvalStorage();
 
     Component systemAdapter;
-    Component evalModule;
+    Component evalModule;// = new SNBEvaluationModule();
+
 
     @Before
     public void init(){
@@ -139,14 +141,24 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
 
         rabbitMqDockerizer = RabbitMqDockerizer.builder().build();
 
-        benchmarkController = benchmarkBuilder.build();
-        dataGen = dataGeneratorBuilder.build();
-        taskGen = taskGeneratorBuilder.build();
-        //evalStorage = evalStorageBuilder.build();
-        evalModule = evalModuleBuilder.build();
-
         if(dockerized) {
+            benchmarkController = benchmarkBuilder.build();
+            dataGen = dataGeneratorBuilder.build();
+            taskGen = taskGeneratorBuilder.build();
+            //evalStorage = evalStorageBuilder.build();
+            evalModule = evalModuleBuilder.build();
             systemAdapter = systemAdapterBuilder.build();
+        }else {
+
+            //use dockerized components if pure are not initialized in the beginning
+            if (benchmarkController == null)
+                benchmarkController = benchmarkBuilder.build();
+            if (dataGen == null)
+                dataGen = dataGeneratorBuilder.build();
+            if (taskGen == null)
+                taskGen = taskGeneratorBuilder.build();
+            if(evalModule==null)
+                evalModule = evalModuleBuilder.build();
         }
 
         commandQueueListener = new CommandQueueListener();

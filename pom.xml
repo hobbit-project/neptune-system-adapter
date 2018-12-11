@@ -48,6 +48,13 @@
 			</exclusions>
 		</dependency>
 
+		<!--<dependency>-->
+			<!--<groupId>org.hobbit</groupId>-->
+			<!--<artifactId>DataStorageBenchmark</artifactId>-->
+			<!--<version>1.0.0-SNAPSHOT</version>-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
+
 		<dependency>
 			<groupId>org.hobbit</groupId>
 			<artifactId>core</artifactId>
