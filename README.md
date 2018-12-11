@@ -21,7 +21,7 @@ HOBBIT-compatible system adapter for [AWS Neptune](https://aws.amazon.com/neptun
 - To run the adapter as docker image (to check it locally before pushing the HOBBIT platform): `checkHealthDockerized()` from BenchmarkTest.java
 
 ## Additional info
-- The adapter uses the [AwsController](https://github.com/hobbit-project/aws-controller) for executing stacks and the [Java SDK](https://github.com/hobbit-project/java-sdk) to run itself locally. Find the dependencies are in the POM file.
+- The adapter uses the [AwsController](https://github.com/hobbit-project/aws-controller) for executing stacks and the [Java SDK](https://github.com/hobbit-project/java-sdk) to run itself locally. 
 - RabbitMQ and containers ot the benchmark are expected to be pulled and started attached to networks `hobbit` and `hobbit-core` (this should be automatically managed by SDK).
 - Containers are trying to find rabbitMQ in a given 30 seconds interval (returning the `Host not found` exception every 5 seconds) and then terminate. Sometimes even 30s is not enougth for some components, then just restart it again.
 - Don't forget to  manually delete created AWS resources after benchmark finished (can be done NeptuneClusterManagerTest.java) or implement it as part of system adapter.
