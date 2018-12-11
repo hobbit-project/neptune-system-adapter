@@ -80,6 +80,20 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
         environmentVariables.set(RABBIT_MQ_HOST_NAME_KEY, "rabbit");
         environmentVariables.set(HOBBIT_SESSION_ID_KEY, "session_"+String.valueOf(new Date().getTime()));
 
+        //setting dummy values to avoid exception in the parameters model creation
+        if(!System.getenv().containsKey("AWS_ACCESS_KEY_ID"))
+            environmentVariables.set("AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID");
+
+        if(!System.getenv().containsKey("AWS_SECRET_KEY"))
+            environmentVariables.set("AWS_SECRET_KEY", "AWS_SECRET_KEY");
+
+        if(!System.getenv().containsKey("AWS_ROLE_ARN"))
+            environmentVariables.set("AWS_ROLE_ARN", "AWS_ROLE_ARN");
+
+        if(!System.getenv().containsKey("AWS_REGION"))
+            environmentVariables.set("AWS_REGION", "AWS_REGION");
+
+
     }
 
     public void init(Boolean useCachedImage) throws Exception {
