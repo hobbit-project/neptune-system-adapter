@@ -9,6 +9,7 @@ import org.hobbit.core.components.Component;
 import org.hobbit.core.rabbit.RabbitMQUtils;
 import org.hobbit.sdk.EnvironmentVariablesWrapper;
 import org.hobbit.sdk.JenaKeyValue;
+import org.hobbit.sdk.docker.AbstractDockerizer;
 import org.hobbit.sdk.docker.PullBasedDockerizer;
 import org.hobbit.sdk.docker.RabbitMqDockerizer;
 import org.hobbit.sdk.docker.builders.AbstractDockersBuilder;
@@ -23,7 +24,8 @@ import org.hobbit.sdk.utils.ModelsHandler;
 import org.hobbit.sdk.utils.MultiThreadedImageBuilder;
 import org.hobbit.sdk.utils.commandreactions.CommandReactionsBuilder;
 
-        import org.hobbit.sparql_snb.systems.neptune.NeptuneSystemAdapter;
+import org.hobbit.sparql_snb.systems.DummySystemAdapter;
+import org.hobbit.sparql_snb.systems.neptune.NeptuneSystemAdapter;
 
 import org.hobbit.vocab.HOBBIT;
 import org.junit.Assert;
@@ -53,7 +55,7 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
     //Original benchmark containers are available (50M triples for SF=1)
     //public static String BENCHMARK_BASE_IMAGE_URI="git.project-hobbit.eu:4567/mspasic/";
 
-    private RabbitMqDockerizer rabbitMqDockerizer;
+    private AbstractDockerizer rabbitMqDockerizer;
     private ComponentsExecutor componentsExecutor;
     private CommandQueueListener commandQueueListener;
 
@@ -68,34 +70,25 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
     Component benchmarkController; // = new SNBBenchmarkController();
     Component dataGen;// = new SNBDataGenerator();
     Component taskGen;// = new SNBTaskGenerator();
-    Component evalStorage;// = new DummyEvalStorage();
+    Component evalStorage = new DummyEvalStorage();
 
-    Component systemAdapter;
+    Component systemAdapter = new NeptuneSystemAdapter();
+    //Component systemAdapter = new DummySystemAdapter();
     Component evalModule;// = new SNBEvaluationModule();
 
 
     @Before
     public void init(){
 
-        //environmentVariables.set("AWS_ROLE_ARN", "");
         environmentVariables.set("AWS_REGION", "eu-west-1");
         environmentVariables.set(RABBIT_MQ_HOST_NAME_KEY, "rabbit");
         environmentVariables.set(HOBBIT_SESSION_ID_KEY, "session_"+String.valueOf(new Date().getTime()));
 
-        //setting dummy values to avoid exception in the parameters model creation
-        if(!System.getenv().containsKey("AWS_ACCESS_KEY_ID"))
-            environmentVariables.set("AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID");
-
-        if(!System.getenv().containsKey("AWS_SECRET_KEY"))
-            environmentVariables.set("AWS_SECRET_KEY", "AWS_SECRET_KEY");
-
-        if(!System.getenv().containsKey("AWS_ROLE_ARN"))
-            environmentVariables.set("AWS_ROLE_ARN", "AWS_ROLE_ARN");
-
-        if(!System.getenv().containsKey("AWS_REGION"))
-            environmentVariables.set("AWS_REGION", "AWS_REGION");
-
-
+        //Must be specified vie env vars or via system.ttl
+//        environmentVariables.set("AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID");
+//        environmentVariables.set("AWS_SECRET_KEY", "AWS_SECRET_KEY");
+//        environmentVariables.set("AWS_ROLE_ARN", "AWS_ROLE_ARN");
+//        environmentVariables.set("AWS_REGION", "AWS_REGION");
     }
 
     public void init(Boolean useCachedImage) throws Exception {
@@ -107,7 +100,6 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
         evalStorageBuilder = new EvalStorageDockerBuilder(new PullBasedDockersBuilder("git.project-hobbit.eu:4567/defaulthobbituser/defaultevaluationstorage:1.0.5"));
         evalModuleBuilder = new EvalModuleDockerBuilder(new PullBasedDockersBuilder((BENCHMARK_BASE_IMAGE_URI+"dsb-evaluationmodule")));
 
-        systemAdapter = new NeptuneSystemAdapter();
         systemAdapterBuilder = new SystemAdapterDockerBuilder(new CommonDockersBuilder(systemAdapter.getClass(), NEPTUNE_IMAGE_NAME).addFileOrFolder("sshkeys").addFileOrFolder("aws").useCachedImage(useCachedImage));
 
     }
@@ -140,31 +132,29 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
         init(useCachedImages);
 
         rabbitMqDockerizer = RabbitMqDockerizer.builder().build();
+        rabbitMqDockerizer.run();
 
-        if(dockerized) {
-            benchmarkController = benchmarkBuilder.build();
-            dataGen = dataGeneratorBuilder.build();
-            taskGen = taskGeneratorBuilder.build();
-            //evalStorage = evalStorageBuilder.build();
-            evalModule = evalModuleBuilder.build();
+        //to test adapter running in a container
+        if(dockerized)
             systemAdapter = systemAdapterBuilder.build();
-        }else {
 
-            //use dockerized components if pure are not initialized in the beginning
-            if (benchmarkController == null)
-                benchmarkController = benchmarkBuilder.build();
-            if (dataGen == null)
-                dataGen = dataGeneratorBuilder.build();
-            if (taskGen == null)
-                taskGen = taskGeneratorBuilder.build();
-            if(evalModule==null)
-                evalModule = evalModuleBuilder.build();
-        }
+
+        //use dockerized components if pure are not initialized in the beginning
+        if (benchmarkController==null)
+            benchmarkController = benchmarkBuilder.build();
+        if (dataGen==null)
+            dataGen = dataGeneratorBuilder.build();
+        if (taskGen==null)
+            taskGen = taskGeneratorBuilder.build();
+        if(evalStorage==null)
+            evalStorage = evalStorageBuilder.build();
+        if(evalModule==null)
+            evalModule = evalModuleBuilder.build();
 
         commandQueueListener = new CommandQueueListener();
         componentsExecutor = new ComponentsExecutor();
 
-        rabbitMqDockerizer.run();
+
 
         CommandReactionsBuilder commandReactionsBuilder = new CommandReactionsBuilder(componentsExecutor, commandQueueListener)
                 .benchmarkController(benchmarkController).benchmarkControllerImageName(benchmarkBuilder.getImageName())
@@ -224,10 +214,19 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
         //model.add(benchmarkInstanceResource, model.createProperty(BENCHMARK_NS+"#neptuneInstanceType"), model.createTypedLiteral("db.r4.2xlarge", "xsd:string"));
         model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#neptuneInstanceType"), "db.r4.large");
 
-        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_ACCESS_KEY_ID"), System.getenv("AWS_ACCESS_KEY_ID"));
-        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_SECRET_KEY"), System.getenv("AWS_SECRET_KEY"));
-        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_ROLE_ARN"), System.getenv("AWS_ROLE_ARN"));
-        model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_REGION"), System.getenv("AWS_REGION"));
+
+        //adding values only if specified to avoid Model exception
+        if(System.getenv().containsKey("AWS_ACCESS_KEY_ID"))
+            model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_ACCESS_KEY_ID"), System.getenv("AWS_ACCESS_KEY_ID"));
+
+        if(System.getenv().containsKey("AWS_SECRET_KEY"))
+            model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_SECRET_KEY"), System.getenv("AWS_SECRET_KEY"));
+
+        if(System.getenv().containsKey("AWS_ROLE_ARN"))
+            model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_ROLE_ARN"), System.getenv("AWS_ROLE_ARN"));
+
+        if(System.getenv().containsKey("AWS_REGION"))
+            model.add(experimentResourceNode, model.createProperty(BENCHMARK_NS+"#AWS_REGION"), System.getenv("AWS_REGION"));
 
         return model;
 
