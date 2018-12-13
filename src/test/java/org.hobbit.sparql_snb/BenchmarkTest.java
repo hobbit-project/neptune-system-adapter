@@ -160,7 +160,7 @@ public class BenchmarkTest extends EnvironmentVariablesWrapper {
                 .benchmarkController(benchmarkController).benchmarkControllerImageName(benchmarkBuilder.getImageName())
                 .dataGenerator(dataGen).dataGeneratorImageName(dataGeneratorBuilder.getImageName())
                 .taskGenerator(taskGen).taskGeneratorImageName(taskGeneratorBuilder.getImageName())
-                .evalStorage(evalStorage).evalStorageImageName("git.project-hobbit.eu:4567/defaulthobbituser/defaultevaluationstorage:1.0.5")
+                .evalStorage(evalStorage).evalStorageImageName(evalStorageBuilder.getImageName())
                 .systemAdapter(systemAdapter).systemAdapterImageName(systemAdapterBuilder.getImageName())
                 .evalModule(evalModule).evalModuleImageName(evalModuleBuilder.getImageName());
 
