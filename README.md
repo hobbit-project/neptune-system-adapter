@@ -32,4 +32,4 @@ The software in this repository automates the management of the official [AWS Ne
 
 Use of Amazon Web Services (including benchmarking purposes) via this software is still regulated by Amazon's terms of use (since you need to provide account-specific information).
 
-Inappropriate use benchmarking results (e.g. for publishing) may cause terms violations and further liability.
+Inappropriate use of benchmarking results (e.g. publishing) may cause terms violations and further liability.
